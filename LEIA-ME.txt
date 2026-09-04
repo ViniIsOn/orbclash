@@ -1,0 +1,16 @@
+ORBCLASH PWA V78 — COMO INSTALAR PELO CELULAR
+
+1. Hospede estes arquivos em um site HTTPS (GitHub Pages funciona).
+2. Abra a URL no Chrome do Android.
+3. Toque em “INSTALAR ORBCLASH” se o botão aparecer.
+4. Se não aparecer: Chrome ⋮ > Adicionar à tela inicial / Instalar app.
+5. Depois da primeira abertura online, o app principal funciona offline.
+
+Arquivos obrigatórios na mesma pasta:
+- index.html
+- manifest.webmanifest
+- sw.js
+- icon-192.png
+- icon-512.png
+
+Observação: áudios/imagens importados pelo seletor de arquivos continuam sendo escolhidos no próprio aparelho; o service worker não copia automaticamente seus arquivos pessoais.
