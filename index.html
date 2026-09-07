@@ -10,7 +10,7 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="icon-192.png" sizes="192x192">
     <link rel="apple-touch-icon" href="icon-192.png">
-    <title>ORBCLASH V89 | MEME PACK + HATCHI + REC</title>
+    <title>ORBCLASH V89 | MEME PACK + SIMBA + REC</title>
     <style>
         * { box-sizing: border-box; }
         body { background: #05060a; color: #ffffff; font-family: 'Roboto', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; position: relative; }
@@ -1121,7 +1121,7 @@ body.v54-video-mode .rec-indicator{top:34px!important}
 
     <div class="app-container">
         <div id="setupScreen" class="sim-screen is-active">
-            <div class="app-title">ORBCLASH V89 • MEME PACK • HYPE • HATCHI • REC • 9:16</div>
+            <div class="app-title">ORBCLASH V89 • MEME PACK • HYPE • SIMBA • REC • 9:16</div>
 
             <div class="menu-dashboard">
                 <section class="menu-main" aria-label="Seleção da batalha">
@@ -3203,7 +3203,7 @@ document.getElementById('dieselVoicePhrase')?.addEventListener('change',(e)=>{ c
                 category: "🐾 ANIMAIS FAVORITOS",
                 fighters: [
                     { id: 'cabra', name: 'Cabra', icon: '🐐', color: '#b98b5b', damage: 9, origin: '🌿', eye: '#111', note: 'A cabra favorita do elenco: ágil, teimosa e especialista em ataques de cabeçada.' },
-                    { id: 'hatchi', name: 'Hatchi', icon: '🐕', color: '#f5f7fb', damage: 8, origin: '❄️', eye: '#69b9ff', note: 'Hatchi é um husky siberiano branco original do ORBCLASH: rápido, energético, expressivo e especialista em corridas, saltos e rajadas geladas.' }
+                    { id: 'hatchi', name: 'Simba', icon: '🐕', color: '#f5f7fb', damage: 8, origin: '❄️', eye: '#69b9ff', note: 'Simba é o cachorro do ORBCLASH inspirado no cão que você pretende adotar: ágil, expressivo e especialista em corridas, saltos e rajadas geladas.' }
                 ]
             },
             {
@@ -3236,7 +3236,7 @@ document.getElementById('dieselVoicePhrase')?.addEventListener('change',(e)=>{ c
                 fighters: [
                     { id: 'judy', name: 'Judy', icon: '🐰', color: '#bdc3c7', damage: 7, origin: '🎬', eye: '#8e44ad' },
                     { id: 'nick', name: 'Nick', icon: '🦊', color: '#e67e22', damage: 7, origin: '🎬', eye: '#2ecc71' },
-                    { id: 'simba', name: 'Simba', icon: '🦁', color: '#f1c40f', damage: 6, origin: '🎬', eye: '#d35400' }
+                    { id: 'simba', name: 'Leão Dourado', icon: '🦁', color: '#f1c40f', damage: 6, origin: '🎬', eye: '#d35400' }
                 ]
             }
         ];
@@ -4101,7 +4101,7 @@ document.getElementById('dieselVoicePhrase')?.addEventListener('change',(e)=>{ c
                     break;
                 }
                 case 'hatchi': {
-                    // V88 — Hatchi: husky siberiano branco, desenho frontal original e legível em tamanho pequeno.
+                    // V91 — Simba: cão preto e branco inspirado na foto da adoção, mantendo o visual vetorial original.
                     c.fillStyle=isSuper?'#ffffff':'#f5f7fb'; c.beginPath(); c.arc(0,0,r*.88,0,Math.PI*2); c.fill();
                     c.fillStyle='#dce5eb';
                     c.beginPath(); c.moveTo(-r*.72,-r*.42); c.quadraticCurveTo(-r*.48,-r*.72,-r*.17,-r*.54); c.lineTo(-r*.04,-r*.05); c.lineTo(-r*.63,r*.02); c.closePath(); c.fill();
@@ -4115,6 +4115,12 @@ document.getElementById('dieselVoicePhrase')?.addEventListener('change',(e)=>{ c
                     c.strokeStyle='#53616b'; c.lineWidth=Math.max(1.5,r*.045); c.lineCap='round';
                     c.beginPath(); c.moveTo(0,r*.19); c.quadraticCurveTo(-r*.12,r*.31,-r*.24,r*.29); c.moveTo(0,r*.19); c.quadraticCurveTo(r*.12,r*.31,r*.24,r*.29); c.stroke();
                     if(isSuper){ c.strokeStyle='#8eeaff'; c.lineWidth=Math.max(2,r*.055); c.beginPath(); c.arc(0,0,r*.92,0,Math.PI*2); c.stroke(); }
+                    // Máscara escura da cabeça e olhos azuis do Simba.
+                    c.fillStyle='#20272d';c.beginPath();c.moveTo(-r*.58,-r*.52);c.quadraticCurveTo(0,-r*1.02,r*.58,-r*.52);c.lineTo(r*.36,-r*.18);c.quadraticCurveTo(0,-r*.42,-r*.36,-r*.18);c.closePath();c.fill();
+                    c.fillStyle='#f7fbff';c.beginPath();c.ellipse(-r*.26,-r*.08,r*.18,r*.23,0,0,Math.PI*2);c.ellipse(r*.26,-r*.08,r*.18,r*.23,0,0,Math.PI*2);c.fill();
+                    c.fillStyle='#69b9ff';c.beginPath();c.arc(-r*.26,-r*.08,r*.075,0,Math.PI*2);c.arc(r*.26,-r*.08,r*.075,0,Math.PI*2);c.fill();
+                    c.fillStyle='#111';c.beginPath();c.arc(-r*.26,-r*.08,r*.032,0,Math.PI*2);c.arc(r*.26,-r*.08,r*.032,0,Math.PI*2);c.fill();
+                    c.fillStyle='#111';c.beginPath();c.ellipse(0,r*.18,r*.12,r*.085,0,0,Math.PI*2);c.fill();
                     break;
                 }
                 case 'yoshi': { c.fillStyle='#fff'; c.beginPath(); c.arc(0, r*0.3, r*0.7, 0, Math.PI); c.fill(); c.fillStyle='#e74c3c'; c.beginPath(); c.arc(-r*0.6, -r*0.2, r*0.25, 0, Math.PI*2); c.fill(); drawBeautifulEyes(c, r, eyeColor, false); c.fillStyle='#2ecc71'; c.beginPath(); c.ellipse(0, r*0.1, r*0.3, r*0.15, 0, 0, Math.PI*2); c.fill(); break; }
@@ -4143,25 +4149,27 @@ document.getElementById('dieselVoicePhrase')?.addEventListener('change',(e)=>{ c
                 case 'tricky': { c.fillStyle='#f1c40f'; c.beginPath(); c.arc(0, -r*0.5, r*0.8, Math.PI, 0); c.fill(); c.strokeStyle='#e74c3c'; c.lineWidth=3; c.beginPath(); c.arc(-r*0.3, -r*0.1, r*0.25, 0, Math.PI*2); c.arc(r*0.3, -r*0.1, r*0.25, 0, Math.PI*2); c.stroke(); drawBeautifulEyes(c, r, eyeColor, false); drawKawaiiMouth(c, r, 'neutral'); break; }
                 case 'yutani': { c.fillStyle='#111'; c.beginPath(); c.arc(-r*0.3, -r*0.2, r*0.3, 0, Math.PI*2); c.arc(r*0.3, -r*0.2, r*0.3, 0, Math.PI*2); c.fill(); c.fillStyle='#fff'; c.beginPath(); c.arc(-r*0.4, -r*0.3, r*0.05, 0, Math.PI*2); c.arc(r*0.2, -r*0.3, r*0.05, 0, Math.PI*2); c.fill(); drawKawaiiMouth(c, r, 'neutral'); break; }
                 case 'frajola': {
-                    // Gato preto e branco frontal, compacto e legível em tamanhos pequenos.
-                    c.fillStyle='#151515';
-                    c.beginPath(); c.arc(0,-r*.05,r*.82,0,Math.PI*2); c.fill(); c.stroke();
-                    // Orelhas
-                    c.beginPath(); c.moveTo(-r*.58,-r*.55); c.lineTo(-r*.82,-r*1.08); c.lineTo(-r*.18,-r*.78); c.closePath(); c.fill();
-                    c.beginPath(); c.moveTo(r*.58,-r*.55); c.lineTo(r*.82,-r*1.08); c.lineTo(r*.18,-r*.78); c.closePath(); c.fill();
-                    // Face branca
-                    c.fillStyle='#f5f5f5';
-                    c.beginPath(); c.ellipse(0,r*.12,r*.48,r*.42,0,0,Math.PI*2); c.fill();
-                    // Olhos
-                    c.fillStyle='#fff'; c.beginPath(); c.ellipse(-r*.28,-r*.12,r*.18,r*.24,0,0,Math.PI*2); c.ellipse(r*.28,-r*.12,r*.18,r*.24,0,0,Math.PI*2); c.fill();
-                    c.fillStyle='#2ecc71'; c.beginPath(); c.ellipse(-r*.28,-r*.10,r*.075,r*.12,0,0,Math.PI*2); c.ellipse(r*.28,-r*.10,r*.075,r*.12,0,0,Math.PI*2); c.fill();
-                    c.fillStyle='#111'; c.beginPath(); c.arc(-r*.28,-r*.10,r*.035,0,Math.PI*2); c.arc(r*.28,-r*.10,r*.035,0,Math.PI*2); c.fill();
-                    // Nariz e bigodes
-                    c.fillStyle='#111'; c.beginPath(); c.moveTo(0,r*.12); c.lineTo(-r*.08,r*.19); c.lineTo(r*.08,r*.19); c.closePath(); c.fill();
-                    c.strokeStyle='#111'; c.lineWidth=Math.max(1,r*.025);
-                    c.beginPath(); c.moveTo(-r*.08,r*.18); c.lineTo(-r*.55,r*.08); c.moveTo(-r*.08,r*.23); c.lineTo(-r*.55,r*.25);
-                    c.moveTo(r*.08,r*.18); c.lineTo(r*.55,r*.08); c.moveTo(r*.08,r*.23); c.lineTo(r*.55,r*.25); c.stroke();
-                    break;
+                    // V91 — Frajola mais reconhecível: gato preto/branco, focinho grande, nariz vermelho e peito branco.
+                    c.save(); c.lineJoin='round'; c.lineCap='round';
+                    c.fillStyle='#111'; c.strokeStyle='#050505'; c.lineWidth=Math.max(2,r*.055);
+                    c.beginPath(); c.ellipse(0,-r*.02,r*.88,r*.84,0,0,Math.PI*2); c.fill(); c.stroke();
+                    // Orelhas pretas altas com interior rosado.
+                    for(const sx of [-1,1]){c.save();c.scale(sx,1);c.fillStyle='#111';c.beginPath();c.moveTo(r*.34,-r*.58);c.lineTo(r*.68,-r*1.24);c.lineTo(r*.90,-r*.48);c.closePath();c.fill();c.stroke();c.fillStyle='#d88b91';c.beginPath();c.moveTo(r*.49,-r*.66);c.lineTo(r*.66,-r*1.02);c.lineTo(r*.76,-r*.57);c.closePath();c.fill();c.restore();}
+                    // Máscara branca central e bochechas grandes.
+                    c.fillStyle='#f7f7f7';
+                    c.beginPath();c.ellipse(0,r*.05,r*.38,r*.58,0,0,Math.PI*2);c.fill();
+                    c.beginPath();c.ellipse(-r*.27,r*.25,r*.35,r*.30,-.12,0,Math.PI*2);c.ellipse(r*.27,r*.25,r*.35,r*.30,.12,0,Math.PI*2);c.fill();
+                    // Olhos altos e expressivos.
+                    c.fillStyle='#fff';c.strokeStyle='#111';c.lineWidth=Math.max(1.5,r*.035);c.beginPath();c.ellipse(-r*.23,-r*.23,r*.18,r*.30,-.06,0,Math.PI*2);c.ellipse(r*.23,-r*.23,r*.18,r*.30,.06,0,Math.PI*2);c.fill();c.stroke();
+                    c.fillStyle='#f0d85a';c.beginPath();c.ellipse(-r*.21,-r*.18,r*.075,r*.13,0,0,Math.PI*2);c.ellipse(r*.21,-r*.18,r*.075,r*.13,0,0,Math.PI*2);c.fill();
+                    c.fillStyle='#111';c.beginPath();c.ellipse(-r*.21,-r*.16,r*.035,r*.075,0,0,Math.PI*2);c.ellipse(r*.21,-r*.16,r*.035,r*.075,0,0,Math.PI*2);c.fill();
+                    // Nariz vermelho grande + sorriso felino.
+                    c.fillStyle='#e53935';c.strokeStyle='#7a1110';c.lineWidth=Math.max(1.5,r*.035);c.beginPath();c.ellipse(0,r*.08,r*.18,r*.14,0,0,Math.PI*2);c.fill();c.stroke();
+                    c.strokeStyle='#111';c.lineWidth=Math.max(1.5,r*.04);c.beginPath();c.moveTo(0,r*.20);c.quadraticCurveTo(-r*.12,r*.34,-r*.25,r*.30);c.moveTo(0,r*.20);c.quadraticCurveTo(r*.12,r*.34,r*.25,r*.30);c.stroke();
+                    // Bigodes longos e peito branco aparecendo na parte inferior.
+                    c.lineWidth=Math.max(1,r*.025);c.beginPath();for(const yy of [r*.15,r*.27,r*.39]){c.moveTo(-r*.28,yy);c.lineTo(-r*.82,yy-r*.10);c.moveTo(r*.28,yy);c.lineTo(r*.82,yy-r*.10);}c.stroke();
+                    c.fillStyle='#fff';c.beginPath();c.moveTo(-r*.43,r*.62);c.quadraticCurveTo(0,r*1.18,r*.43,r*.62);c.quadraticCurveTo(0,r*.78,-r*.43,r*.62);c.fill();
+                    c.restore(); break;
                 }
                 case 'homem_diesel': {
                     const img=embeddedCharacterImageObjects.homem_diesel;
@@ -4582,9 +4590,9 @@ document.getElementById('dieselVoicePhrase')?.addEventListener('change',(e)=>{ c
             { mode: 'x1', ids: ['bal_oliveira', 'lily'], title: "NATUREZA & LATIDOS", ctx: "Bal protege o filhote enquanto Lily transforma a arena em uma sirene!" },
             { mode: 'x1', ids: ['win7', 'uttp'], title: "SEGURANÇA DIGITAL", ctx: "O Sistema Operacional tenta banir o bot Troll da rede!" },
             { mode: 'x1', ids: ['skater_boy', 'sonic'], title: "CLÁSSICOS DE CELULAR", ctx: "Skater Boy encara Sonic numa disputa de velocidade e manobras!" },
-            { mode: 'x1', ids: ['hatchi', 'cabra'], title: "NEVE VS MONTANHA", ctx: "Hatchi dispara pela arena enquanto a Cabra tenta segurar a trilha!" },
+            { mode: 'x1', ids: ['hatchi', 'cabra'], title: "NEVE VS MONTANHA", ctx: "Simba dispara pela arena enquanto a Cabra tenta segurar a trilha!" },
             { mode: 'x1', ids: ['sharkdog', 'basic_cat'], title: "PETS IMPOSSÍVEIS", ctx: "Tubacão encara o Basic Cat numa batalha estranhamente fofa!" },
-            { mode: 'ffa', ids: ['vini', 'judy', 'nick', 'simba'], title: "VINI VS CRINGE", ctx: "A batalha contra os traumas e o Simba!" }
+            { mode: 'ffa', ids: ['vini', 'judy', 'nick', 'simba'], title: "VINI VS LEÃO", ctx: "Uma luta contra o Leão Dourado!" }
         ];
         let currentSugIdx = 0;
 
@@ -8120,8 +8128,8 @@ function startGameCore() {
 
   queueMicrotask(()=>{
     v89InstallUi();
-    try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V89 • MEME PACK • HYPE • HATCHI • REC • 9:16 ';}catch(_){ }
-    try{document.title='ORBCLASH V89 | MEME PACK + HATCHI + REC';}catch(_){ }
+    try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V89 • MEME PACK • HYPE • SIMBA • REC • 9:16 ';}catch(_){ }
+    try{document.title='ORBCLASH V89 | MEME PACK + SIMBA + REC';}catch(_){ }
   });
 })();
 </script>
@@ -8188,6 +8196,7 @@ function startGameCore() {
     for(const [k,aliases] of Object.entries(V90_ALIASES)){const f=findFile(files,aliases);if(f&&bind(k,f))n++;}
     updatePanel();return n;
   }
+  window.v90BindMemeFiles=bindFiles; window.v90MemeAudio=v90Audio;
 
   // Reprodutor de KO: funciona durante a pequena pausa pós-morte, mesmo depois de gameOver=true.
   // O clone entra em activeAudioClones para também ser capturado no MP4 e parado na cena final.
@@ -8376,10 +8385,102 @@ function startGameCore() {
 
   queueMicrotask(()=>{
     installUi();
-    try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V90 • KO EXPRESSIVO • MEME PACK • HATCHI • REC • 9:16 ';}catch(_){ }
+    try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V90 • KO EXPRESSIVO • MEME PACK • SIMBA • REC • 9:16 ';}catch(_){ }
     try{document.title='ORBCLASH V90 | KO EXPRESSIVO + MEME PACK';}catch(_){ }
   });
 })();
 </script>
+
+
+<!-- V91 — SIMBA + SUPREMES ÚNICOS + MEME AUDIO FIX -->
+<script>
+(()=>{
+'use strict';
+// Reassocia os 7 memes mesmo quando vieram do cache/IndexedDB antes do V90 carregar.
+function v91RebindMemes(files){try{return window.v90BindMemeFiles?.(files)||0;}catch(e){console.warn('[V91 MEMES]',e);return 0;}}
+window.addEventListener('DOMContentLoaded',()=>{
+  try{if(Array.isArray(window.v71LastAudioFiles)&&window.v71LastAudioFiles.length)v91RebindMemes(window.v71LastAudioFiles);}catch(_){ }
+  ['v77MobileFilesInput','v77MobileFolderInput','audioFileInput','audioFolderInput'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('change',e=>setTimeout(()=>v91RebindMemes(e.target.files),90));
+  });
+  setTimeout(()=>{try{if(Array.isArray(window.v71LastAudioFiles))v91RebindMemes(window.v71LastAudioFiles);}catch(_){}},650);
+});
+
+// Mostra Simba em todos os pontos de UI sem quebrar saves antigos que ainda usam id "hatchi".
+try{
+  const f=(typeof fightersData!=='undefined'?fightersData:[]).find(x=>x.id==='hatchi');if(f){f.name='Simba';f.note='Simba é o cachorro do ORBCLASH inspirado no cão que você pretende adotar: preto e branco, ágil e cheio de energia.';}
+  document.querySelectorAll('.fighter-card').forEach(card=>{const cb=card.querySelector('.f-check');if(cb?.value==='hatchi'){const nm=card.querySelector('.fighter-name');if(nm)nm.childNodes[0].textContent='Simba ';}});
+}catch(_){ }
+
+// Supreme V91: só o tipo RUSH avança no adversário. Os demais têm mecânicas próprias.
+if(typeof Ball!=='undefined'){
+  const v91OldSup=Ball.prototype.performSupreme;
+  const enemies=(a)=>balls.filter(b=>b&&b.alive&&b!==a&&b.team!==a.team);
+  const nearest=(a)=>{let best=null,bd=Infinity;for(const b of enemies(a)){const d=Math.hypot(b.x-a.x,b.y-a.y);if(d<bd){bd=d;best=b;}}return best;};
+  const hit=(a,t,raw,type='impact_wave',launch=.20)=>{if(!a?.alive||!t?.alive)return false;try{v55ApplyHit(t,a,raw,type,a.x,a.y,launch);playImpactSound(type,raw);burst(t.x,t.y,'#ffe66d',7);addCombatShake(3);}catch(_){ }return true;};
+  const shoot=(a,ang,pf,mul=1,size=1,speed=1,bounce=false)=>{try{a.shootAbsolute(pf.color||a.color,(pf.speed||18)*speed,(pf.size||14)*size,bounce,ang,(pf.damage||1.25)*mul,pf.type||'impact_wave');}catch(_){ }};
+  const cue=(a)=>{try{playSound('supreme');}catch(_){ }try{if(a.id==='skater_boy')playSkaterBoySfx('starbomb',0);if(a.id==='problema_seu'&&!problemaVoiceBusy)playProblemaSeuVoice(true);if(a.id==='barraco')playBarracoVoice(true);if(a.id==='bal_oliveira')playBalOliveiraVoice(true);if(a.id==='homem_diesel')playDieselVoice();if(V71_GENERIC_VOICES?.has?.(a.id))v71PlayGenericVoice(a.id,true);}catch(_){ }};
+  Ball.prototype.performSupreme=function(target){
+    if(this.id==='skater_boy'&&typeof this.v83SkaterSupreme==='function')return this.v83SkaterSupreme(target);
+    if(this.id==='earclacks_crossbow'&&typeof this.v84CrossbowSupreme==='function')return this.v84CrossbowSupreme(target);
+    if(this.isDoingSupreme)return;
+    const self=this,pf=getV60SupremeProfile(this),kind=pf.kind||'burst';
+    this.isDoingSupreme=true;this.hasSupreme=false;this.lastAction='★ '+v60SupremeTitle(this)+' ★';this.vx*=.12;this.vy*=.12;cue(this);
+    const T=()=>target&&target.alive?target:nearest(self);
+    const raw=Math.max(9,self.damage*(pf.damage||1.25));
+    const finish=(ms)=>setTimeout(()=>{self.isDoingSupreme=false;},ms);
+
+    if(kind==='rush'){
+      // Rush é o ÚNICO Supreme que realmente investe no rival.
+      [50,240,440].forEach((d,i)=>setTimeout(()=>{const t=T();if(!self.alive||!t)return;const a=Math.atan2(t.y-self.y,t.x-self.x);self.aimAngle=a;self.vx=Math.cos(a)*(11+i*1.2);self.vy=Math.sin(a)*(6+i*.4);shoot(self,a,pf,.72,1+i*.12,1,false);setTimeout(()=>{if(t.alive&&Math.hypot(t.x-self.x,t.y-self.y)<self.radius+t.radius+72)hit(self,t,raw*(i===2?.95:.62),pf.type,.28);},90);},d));finish(850);return;
+    }
+    if(kind==='beam'){
+      // Para, carrega e dispara um feixe reto em rajadas.
+      [180,330,480].forEach((d,i)=>setTimeout(()=>{const t=T();if(!t)return;const a=Math.atan2(t.y-self.y,t.x-self.x);self.aimAngle=a;shoot(self,a,pf,1.15+i*.08,1.25+i*.15,1.15,false);if(i===2&&Math.abs(Math.atan2(t.y-self.y,t.x-self.x)-a)<.5)hit(self,t,raw*1.05,pf.type,.16);},d));finish(900);return;
+    }
+    if(kind==='wave'){
+      // Leque largo sem deslocar o usuário.
+      setTimeout(()=>{const t=T();const base=t?Math.atan2(t.y-self.y,t.x-self.x):self.aimAngle;for(let i=-4;i<=4;i++)shoot(self,base+i*.16,pf,.72,1.0,1,false);},220);finish(760);return;
+    }
+    if(kind==='spin'){
+      // Giro estacionário: projéteis em 360 graus + dano próximo.
+      [160,320,480].forEach((d,k)=>setTimeout(()=>{for(let i=0;i<8;i++)shoot(self,i*Math.PI/4+k*.22,pf,.58,1,1,i%3===0);for(const t of enemies(self))if(Math.hypot(t.x-self.x,t.y-self.y)<self.radius+t.radius+96)hit(self,t,raw*.46,pf.type,.14);},d));finish(850);return;
+    }
+    if(kind==='pulse'){
+      // Três ondas circulares de energia ao redor do personagem.
+      [190,380,590].forEach((d,i)=>setTimeout(()=>{burst(self.x,self.y,pf.color||self.color,12+i*3);for(const t of enemies(self))if(Math.hypot(t.x-self.x,t.y-self.y)<125+i*26+t.radius)hit(self,t,raw*(.45+i*.08),pf.type,.10);},d));finish(920);return;
+    }
+    if(kind==='storm'||kind==='vortex'){
+      // Tempestade giratória: tiros orbitais, usuário fica no centro.
+      for(let k=0;k<4;k++)setTimeout(()=>{for(let i=0;i<7;i++)shoot(self,(i/7)*Math.PI*2+k*.30,pf,.52,1.0,kind==='vortex'?.78:1.0,true);},140+k*150);finish(900);return;
+    }
+    if(kind==='rain'){
+      // Chuva cai de cima sobre a posição dos inimigos.
+      [160,300,440,580].forEach((d,k)=>setTimeout(()=>{for(const t of enemies(self).slice(0,4)){for(let j=0;j<2;j++){projectiles.push({x:t.x+(Math.random()-.5)*90,y:arena.y+8,vx:(Math.random()-.5)*1.5,vy:10+Math.random()*4,owner:self,radius:(pf.size||14),life:72,color:pf.color||self.color,bounce:false,dmgMult:(pf.damage||1.2)*.72,type:pf.type||'impact_wave'});}}},d));finish(1000);return;
+    }
+    if(kind==='slam'){
+      // Salto vertical + impacto no chão, sem perseguir horizontalmente.
+      self.vy=-11;setTimeout(()=>{self.vx*=.1;self.vy=9;},220);setTimeout(()=>{burst(self.x,self.y,pf.color||self.color,20);for(const t of enemies(self))if(Math.hypot(t.x-self.x,t.y-self.y)<170+t.radius)hit(self,t,raw*1.15,pf.type,.30);addCombatShake(6);},520);finish(900);return;
+    }
+    if(kind==='trap'||kind==='seal'){
+      // Marca o alvo e explode a área alguns instantes depois.
+      const t=T();if(!t){finish(500);return;}const mark={x:t.x,y:t.y};burst(mark.x,mark.y,pf.color||self.color,6);setTimeout(()=>{burst(mark.x,mark.y,pf.color||self.color,20);for(const e of enemies(self))if(Math.hypot(e.x-mark.x,e.y-mark.y)<95+e.radius)hit(self,e,raw*1.05,pf.type,.12);},520);finish(950);return;
+    }
+    if(kind==='giant'){
+      // Tremor gigante: ondas sequenciais que ocupam a arena, sem dash.
+      [180,370,560].forEach((d,i)=>setTimeout(()=>{burst(self.x,self.y,pf.color||self.color,18);for(const t of enemies(self))if(Math.hypot(t.x-self.x,t.y-self.y)<145+i*48+t.radius)hit(self,t,raw*(.55+i*.14),pf.type,.16);},d));finish(950);return;
+    }
+    if(kind==='glitch'){
+      // Teleporte curto aleatório + rajadas digitais, em vez de avançar no alvo.
+      [140,320,500].forEach((d,k)=>setTimeout(()=>{self.x=Math.max(arena.x+self.radius,Math.min(arena.x+arena.w-self.radius,self.x+(Math.random()-.5)*150));self.y=Math.max(arena.y+self.radius,Math.min(arena.y+arena.h-self.radius,self.y+(Math.random()-.5)*120));for(let i=0;i<5;i++)shoot(self,Math.random()*Math.PI*2,pf,.65,1,1,true);},d));finish(900);return;
+    }
+    // Burst/default: explosão radial limpa, sem perseguição.
+    setTimeout(()=>{for(let i=0;i<12;i++)shoot(self,i*Math.PI/6,pf,.72,1.12,1,false);for(const t of enemies(self))if(Math.hypot(t.x-self.x,t.y-self.y)<130+t.radius)hit(self,t,raw*.72,pf.type,.14);},260);finish(760);
+  };
+}
+queueMicrotask(()=>{try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V91 • SIMBA • SUPREMES ÚNICOS • MEME FIX • REC • 9:16 ';document.title='ORBCLASH V91 | SIMBA + SUPREMES ÚNICOS';}catch(_){ }});
+})();
+</script>
+
 </body>
 </html>
