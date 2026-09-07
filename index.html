@@ -1121,7 +1121,7 @@ body.v54-video-mode .rec-indicator{top:34px!important}
 
     <div class="app-container">
         <div id="setupScreen" class="sim-screen is-active">
-            <div class="app-title">ORBCLASH V89 • MEME PACK • HYPE • SIMBA • REC • 9:16</div>
+            <div class="app-title">ORBCLASH V89 • MEME PACK • SIMBA • REC • 9:16</div>
 
             <div class="menu-dashboard">
                 <section class="menu-main" aria-label="Seleção da batalha">
@@ -7974,24 +7974,19 @@ function startGameCore() {
   }
   function v89AddHype(amount){v89Hype=Math.max(0,Math.min(100,v89Hype+Number(amount||0)));v89HypeLast=performance.now();}
   function v89DrawOverlay(){
+    // V92: a barra/texto HYPE saiu da arena. Mantemos somente stickers curtos,
+    // porque a HUD já tem informação suficiente e o vídeo fica mais limpo.
     const now=performance.now();
-    const dt=Math.max(0,now-v89HypeLast);v89Hype=Math.max(0,v89Hype-dt*.0035);v89HypeLast=now;
     try{
       ctx.save();
-      // HYPE meter compacto, sem cobrir a HUD.
-      const w=122,h=8,x=canvas.width/2-w/2,y=30;
-      ctx.fillStyle='rgba(0,0,0,.60)';ctx.beginPath();ctx.roundRect(x-2,y-2,w+4,h+4,6);ctx.fill();
-      const g=ctx.createLinearGradient(x,0,x+w,0);g.addColorStop(0,'#74b9ff');g.addColorStop(.55,'#ffe066');g.addColorStop(1,'#ff7675');
-      ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(x,y,w*(v89Hype/100),h,4);ctx.fill();
-      ctx.fillStyle='#fff';ctx.font='900 7px Arial Black,Arial';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('HYPE',canvas.width/2,y-3);
       if(v89Sticker && now<v89Sticker.until){
         const life=Math.max(0,Math.min(1,(v89Sticker.until-now)/950));
         const age=Math.max(0,Math.min(1,(now-v89Sticker.born)/150));
-        const scale=.88+Math.sin(age*Math.PI/2)*.20;
-        ctx.translate(canvas.width/2,96);ctx.scale(scale,scale);
+        const scale=.90+Math.sin(age*Math.PI/2)*.16;
+        ctx.translate(canvas.width/2,88);ctx.scale(scale,scale);
         ctx.globalAlpha=Math.min(1,life*1.8);
-        ctx.font='900 26px Arial Black,Impact,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.lineWidth=7;ctx.strokeStyle='rgba(0,0,0,.85)';ctx.strokeText(v89Sticker.text,0,0);
+        ctx.font='900 22px Arial Black,Impact,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.lineWidth=6;ctx.strokeStyle='rgba(0,0,0,.82)';ctx.strokeText(v89Sticker.text,0,0);
         ctx.fillStyle=v89Sticker.color;ctx.fillText(v89Sticker.text,0,0);
       }else if(v89Sticker){v89Sticker=null;}
       ctx.restore();
@@ -8117,7 +8112,7 @@ function startGameCore() {
       #v89MemeBox b{color:#ffe066} #v89MemeBox label{display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 6px;border-radius:7px;background:rgba(0,0,0,.20);cursor:pointer}
       #v89MemeStatus{margin-top:5px;color:#b9ffcf} #v89MemeFiles{margin-top:4px;color:#b8c8d8;font-size:.50rem}
     `;document.head.appendChild(style);
-    const box=document.createElement('div');box.id='v89MemeBox';box.innerHTML=`<b>🎭 MEME PACK 2026 — SAFE MODE</b><div id="v89MemeStatus"></div><label><input id="v89MemeFxToggle" type="checkbox" checked> Reações + stickers + HYPE</label><label><input id="v89MemePianoToggle" type="checkbox" checked> Piano meme nas lutas normais</label><div id="v89MemeFiles">Arquivos aceitos: meme-bonk, meme-record-scratch, meme-crowd-gasp, meme-airhorn, meme-glitch, meme-cheer e meme-piano (MP3/WAV/OGG).</div>`;
+    const box=document.createElement('div');box.id='v89MemeBox';box.innerHTML=`<b>🎭 MEME PACK 2026 — SAFE MODE</b><div id="v89MemeStatus"></div><label><input id="v89MemeFxToggle" type="checkbox" checked> Reações + stickers</label><label><input id="v89MemePianoToggle" type="checkbox" checked> Piano meme nas lutas normais</label><div id="v89MemeFiles">Arquivos aceitos: meme-bonk, meme-record-scratch, meme-crowd-gasp, meme-airhorn, meme-glitch, meme-cheer e meme-piano (MP3/WAV/OGG).</div>`;
     const side=document.querySelector('.menu-side');
     const anchor=document.querySelector('.auto-assets-box');
     if(anchor&&anchor.parentNode)anchor.insertAdjacentElement('afterend',box);else if(side)side.prepend(box);else document.getElementById('setupScreen')?.appendChild(box);
@@ -8128,7 +8123,7 @@ function startGameCore() {
 
   queueMicrotask(()=>{
     v89InstallUi();
-    try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V89 • MEME PACK • HYPE • SIMBA • REC • 9:16 ';}catch(_){ }
+    try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V89 • MEME PACK • SIMBA • REC • 9:16 ';}catch(_){ }
     try{document.title='ORBCLASH V89 | MEME PACK + SIMBA + REC';}catch(_){ }
   });
 })();
@@ -8282,45 +8277,66 @@ function startGameCore() {
   }
 
   function drawExpression(fx,t){
-    const b=fx.ball,r=b.radius||22;
-    const pop=t<.18?(.82+t/.18*.30):(1.12-(t-.18)*.26);
-    const fade=t>.72?Math.max(0,1-(t-.72)/.28):1;
-    const rise=44*(t*t);
-    const spin=(fx.style==='panic'?Math.sin(t*11)*.14:(t*t)*.65)*(fx.vx<0?-1:1);
-    const x=Math.max(r+5,Math.min(canvas.width-r-5,fx.x+fx.vx*t*7));
-    const y=Math.max(r+8,Math.min(canvas.height-r-28,fx.y-rise));
-    ctx.save();ctx.translate(x,y);ctx.rotate(spin);ctx.scale(pop,pop);ctx.globalAlpha=.96*fade;
-    if(b.isBoss){try{drawMasterHand(ctx,r,'IDLE',0);}catch(_){ }}else{try{drawCachedFighter(b);}catch(_){ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fillStyle=b.color;ctx.fill();}}
+    // V92: KO universal/cinemático. Não desenha olhos ou bocas genéricos sobre o personagem,
+    // então cabra, animais, humanos e personagens com rosto próprio preservam o design original.
+    const b=fx.ball,r=Math.max(14,b.radius||22);
+    const impact=Math.min(1,t/.16);
+    const settle=Math.max(0,Math.min(1,(t-.16)/.34));
+    const fade=t>.78?Math.max(0,1-(t-.78)/.22):1;
+    const squashY=t<.16?(1-.18*Math.sin(impact*Math.PI)):(.96+.04*settle);
+    const stretchX=t<.16?(1+.14*Math.sin(impact*Math.PI)):(1.04-.04*settle);
+    const lift=24*(t*t);
+    const dir=(fx.vx<0?-1:1);
+    const tilt=(fx.style==='panic'?Math.sin(t*7)*.055:(.035+.07*t))*dir;
+    const drift=Math.max(-18,Math.min(18,fx.vx*t*2.2));
+    const x=Math.max(r+7,Math.min(canvas.width-r-7,fx.x+drift));
+    const y=Math.max(r+12,Math.min(canvas.height-r-34,fx.y-lift));
 
-    // Máscara facial de reação — aparece só no KO para a bola finalmente "atuar".
-    if(!b.isBoss){
-      ctx.globalAlpha=.98*fade;
-      const eyeY=-r*.10, ex=r*.29, er=Math.max(3,r*.12);
-      ctx.fillStyle='rgba(255,255,255,.92)';
-      ctx.beginPath();ctx.arc(-ex,eyeY,er*1.28,0,Math.PI*2);ctx.arc(ex,eyeY,er*1.28,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='#111';ctx.lineWidth=Math.max(2,r*.08);ctx.lineCap='round';
-      if(fx.style==='shock'||fx.style==='panic'){
-        ctx.fillStyle='#111';ctx.beginPath();ctx.arc(-ex,eyeY,er*.48,0,Math.PI*2);ctx.arc(ex,eyeY,er*.48,0,Math.PI*2);ctx.fill();
-      }else{
-        for(const sx of [-1,1]){const cx=sx*ex;ctx.beginPath();ctx.moveTo(cx-er,eyeY-er);ctx.lineTo(cx+er,eyeY+er);ctx.moveTo(cx+er,eyeY-er);ctx.lineTo(cx-er,eyeY+er);ctx.stroke();}
-      }
-      // Boca varia entre choque e derrota.
-      ctx.fillStyle='#161616';ctx.strokeStyle='#fff';ctx.lineWidth=1.4;
-      ctx.beginPath();
-      if(fx.style==='panic'){ctx.ellipse(0,r*.30,r*.20,r*.29,0,0,Math.PI*2);}
-      else if(fx.style==='shock'){ctx.ellipse(0,r*.28,r*.17,r*.22,0,0,Math.PI*2);}
-      else{ctx.arc(0,r*.42,r*.23,Math.PI*1.05,Math.PI*1.95);}
-      ctx.fill();ctx.stroke();
-      // Duas gotinhas cartunescas nas reações de pânico.
-      if(fx.style==='panic'){
-        ctx.fillStyle='#74b9ff';ctx.beginPath();ctx.ellipse(-r*.68,-r*.24,r*.09,r*.18,-.45,0,Math.PI*2);ctx.ellipse(r*.68,-r*.20,r*.09,r*.18,.45,0,Math.PI*2);ctx.fill();
-      }
+    // Sombra suave: mantém sensação de peso sem parecer eletrocutado.
+    ctx.save();
+    ctx.globalAlpha=.28*fade*(1-t*.45);
+    ctx.fillStyle='#000';
+    ctx.beginPath();ctx.ellipse(x,y+r*.92,r*.72*(1-t*.35),r*.18*(1-t*.45),0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+
+    // Anel de impacto elegante somente no começo do KO.
+    if(t<.34){
+      const q=t/.34,rr=r*(1.05+1.15*q);
+      ctx.save();ctx.globalAlpha=(1-q)*.72;ctx.strokeStyle=fx.style==='panic'?'#ffb3bd':fx.style==='shock'?'#b8e6ff':'#ffe9a3';
+      ctx.lineWidth=Math.max(2,4*(1-q)+1);ctx.beginPath();ctx.arc(x,y,rr,0,Math.PI*2);ctx.stroke();ctx.restore();
+    }
+
+    // Personagem intacto: apenas squash, pequena inclinação e fade.
+    ctx.save();ctx.translate(x,y);ctx.rotate(tilt);ctx.scale(stretchX,squashY);ctx.globalAlpha=.98*fade;
+    if(t<.12){ctx.shadowBlur=14*(1-t/.12);ctx.shadowColor='#fff';}
+    if(b.isBoss){try{drawMasterHand(ctx,r,'IDLE',0);}catch(_){ }}
+    else{try{drawCachedFighter(b);}catch(_){ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fillStyle=b.color;ctx.fill();}}
+    ctx.restore();
+
+    // Símbolo de emoção separado do rosto. Funciona em qualquer personagem sem deformá-lo.
+    const symbol=fx.style==='panic'?'!':fx.style==='shock'?'?':'×';
+    const bubbleY=Math.max(54,y-r*1.45);
+    const bubbleR=Math.max(8,Math.min(12,r*.42));
+    ctx.save();ctx.globalAlpha=Math.min(1,fade*1.25);
+    ctx.fillStyle='rgba(8,12,18,.88)';ctx.strokeStyle=fx.style==='panic'?'#ff7675':fx.style==='shock'?'#74b9ff':'#ffe066';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(x+r*.62,bubbleY,bubbleR,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font=`900 ${Math.round(bubbleR*1.45)}px Arial Black,Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(symbol,x+r*.62,bubbleY+.5);
+    ctx.restore();
+
+    // Três estrelinhas/orbitais discretos: expressão visual sem cobrir a arte.
+    ctx.save();ctx.globalAlpha=.72*fade;ctx.fillStyle='#fff4b0';
+    for(let i=0;i<3;i++){
+      const a=t*2.6+i*(Math.PI*2/3),rr=r*(1.15+.28*i);const sx=x+Math.cos(a)*rr,sy=y+Math.sin(a)*rr*.55-r*.08;
+      const sz=2.4+(i===0?1.2:0);ctx.beginPath();ctx.moveTo(sx,sy-sz);ctx.lineTo(sx+sz*.45,sy-sz*.35);ctx.lineTo(sx+sz,sy);ctx.lineTo(sx+sz*.45,sy+sz*.35);ctx.lineTo(sx,sy+sz);ctx.lineTo(sx-sz*.45,sy+sz*.35);ctx.lineTo(sx-sz,sy);ctx.lineTo(sx-sz*.45,sy-sz*.35);ctx.closePath();ctx.fill();
     }
     ctx.restore();
 
-    // Balão curto acima da bola, contornado para funcionar em qualquer mapa.
+    // Legenda menor, em cápsula, para não competir com HUD e personagem.
     ctx.save();ctx.globalAlpha=fade;ctx.textAlign='center';ctx.textBaseline='middle';
-    const ty=Math.max(58,y-r*1.65);ctx.font='900 18px Arial Black,Impact,sans-serif';ctx.lineWidth=6;ctx.strokeStyle='rgba(0,0,0,.88)';ctx.strokeText(fx.label,x,ty);ctx.fillStyle=fx.style==='panic'?'#ff7675':fx.style==='shock'?'#74b9ff':'#ffe066';ctx.fillText(fx.label,x,ty);ctx.restore();
+    const label=String(fx.label||'KO!').slice(0,12);const ty=Math.max(70,y-r*2.05);ctx.font='900 12px Arial Black,Arial';
+    const tw=Math.min(118,Math.max(42,ctx.measureText(label).width+18));
+    ctx.fillStyle='rgba(0,0,0,.72)';ctx.strokeStyle='rgba(255,255,255,.30)';ctx.lineWidth=1.2;ctx.beginPath();ctx.roundRect(x-tw/2,ty-10,tw,20,10);ctx.fill();ctx.stroke();
+    ctx.fillStyle=fx.style==='panic'?'#ffb3bd':fx.style==='shock'?'#b8e6ff':'#ffe9a3';ctx.fillText(label,x,ty+.5);ctx.restore();
   }
   function drawDeathFx(){
     if(!v90Enabled||!v90DeathFx.length)return;
@@ -8378,7 +8394,7 @@ function startGameCore() {
     if(document.getElementById('v90MemeDeaths'))return;
     const style=document.createElement('style');style.textContent=`#v90MemeDeaths{margin-top:7px;border-top:1px dashed rgba(255,255,255,.18);padding-top:7px}#v90MemeDeaths label{display:flex;gap:6px;align-items:center}#v90MemeStatus{color:#b9ffcf;margin-top:4px;font-size:.50rem}`;document.head.appendChild(style);
     const host=document.getElementById('v89MemeBox')||document.querySelector('.auto-assets-box');if(!host)return;
-    const d=document.createElement('div');d.id='v90MemeDeaths';d.innerHTML=`<b>💀 KO EXPRESSIVO</b><label><input id="v90DeathToggle" type="checkbox" checked> Animação facial + memes na morte</label><div id="v90MemeStatus"></div><div style="font-size:.47rem;color:#b8c8d8;margin-top:3px">Reconhece: Kirby Falling • Roblox Death • Huh Cat • y2mate_HOnnyD0 • Frog Laugh • Cat Laugh • Chicken Screaming.</div>`;host.appendChild(d);
+    const d=document.createElement('div');d.id='v90MemeDeaths';d.innerHTML=`<b>💀 KO EXPRESSIVO</b><label><input id="v90DeathToggle" type="checkbox" checked> KO cinematográfico + memes na morte</label><div id="v90MemeStatus"></div><div style="font-size:.47rem;color:#b8c8d8;margin-top:3px">Reconhece: Kirby Falling • Roblox Death • Huh Cat • y2mate_HOnnyD0 • Frog Laugh • Cat Laugh • Chicken Screaming.</div>`;host.appendChild(d);
     d.querySelector('#v90DeathToggle')?.addEventListener('change',e=>{v90Enabled=!!e.target.checked;if(!v90Enabled){v90DeathFx.length=0;window.v90DeathHoldUntil=0;}});
     updatePanel();
   }
@@ -8479,6 +8495,22 @@ if(typeof Ball!=='undefined'){
   };
 }
 queueMicrotask(()=>{try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V91 • SIMBA • SUPREMES ÚNICOS • MEME FIX • REC • 9:16 ';document.title='ORBCLASH V91 | SIMBA + SUPREMES ÚNICOS';}catch(_){ }});
+})();
+</script>
+
+<!-- V92 — CLEAN HUD + UNIVERSAL KO -->
+<script>
+(()=>{
+  'use strict';
+  queueMicrotask(()=>{
+    try{
+      const t=document.querySelector('.app-title');
+      if(t)t.childNodes[0].textContent='ORBCLASH V92 • HUD LIMPA • KO CINEMATOGRÁFICO • SIMBA • REC • 9:16 ';
+      document.title='ORBCLASH V92 | HUD LIMPA + KO CINEMATOGRÁFICO';
+      const memeLabel=document.querySelector('#v89MemeFxToggle')?.closest('label');
+      if(memeLabel){const cb=memeLabel.querySelector('input');memeLabel.textContent=' Reações + stickers';if(cb)memeLabel.prepend(cb);}
+    }catch(_){}
+  });
 })();
 </script>
 
