@@ -10,7 +10,7 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="icon-192.png" sizes="192x192">
     <link rel="apple-touch-icon" href="icon-192.png">
-    <title>ORBCLASH V87 MOBILE | START CUE + MASTER HAND RIFT + REC</title>
+    <title>ORBCLASH V89 | MEME PACK + HATCHI + REC</title>
     <style>
         * { box-sizing: border-box; }
         body { background: #05060a; color: #ffffff; font-family: 'Roboto', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; position: relative; }
@@ -1121,7 +1121,7 @@ body.v54-video-mode .rec-indicator{top:34px!important}
 
     <div class="app-container">
         <div id="setupScreen" class="sim-screen is-active">
-            <div class="app-title">ORBCLASH V87 MOBILE • START CUE • MASTER HAND RIFT • REC • 9:16</div>
+            <div class="app-title">ORBCLASH V89 • MEME PACK • HYPE • HATCHI • REC • 9:16</div>
 
             <div class="menu-dashboard">
                 <section class="menu-main" aria-label="Seleção da batalha">
@@ -5947,10 +5947,13 @@ document.getElementById('dieselVoicePhrase')?.addEventListener('change',(e)=>{ c
                 barracoCaption=null; balCaption=null; problemaCaption=null;
             }
 
-            if (aliveTeams.length <= 1 && balls.length > 1) { if(!gameOver) { gameOver = true; stopAllBattleAudioForFinal(); finalWinnerSnapshot = vivos.map(b => ({...b})); finalAliveTeamsSnapshot = [...aliveTeams]; try { orbPostRememberResult(finalWinnerSnapshot, finalAliveTeamsSnapshot); } catch(e) {} projectiles.length=0; items.length=0; trails.length=0; v66CloneFx.length=0; if(explosions.length>4)explosions.splice(0,explosions.length-4); } }
+            if (aliveTeams.length <= 1 && balls.length > 1) { if(!gameOver) { gameOver = true; if(!(window.v90DeathHoldUntil && performance.now() < window.v90DeathHoldUntil)) stopAllBattleAudioForFinal(); finalWinnerSnapshot = vivos.map(b => ({...b})); finalAliveTeamsSnapshot = [...aliveTeams]; try { orbPostRememberResult(finalWinnerSnapshot, finalAliveTeamsSnapshot); } catch(e) {} projectiles.length=0; items.length=0; trails.length=0; v66CloneFx.length=0; if(explosions.length>4)explosions.splice(0,explosions.length-4); } }
 
             if (gameOver) {
                 gameOverTimer++;
+                // V90: segura a transição final por um instante para a bola morta
+                // conseguir mostrar a reação/expressão de KO e o meme terminar de entrar.
+                if (gameOverTimer === 1 && performance.now() < Number(window.v90DeathHoldUntil||0)) gameOverTimer = 0;
                 if (gameOverTimer === 1) {
                     try { stopAllBattleAudioForFinal(); clearTimeout(barracoTimeout); } catch(e) {}
                     finalSceneActive = true;
@@ -7888,5 +7891,495 @@ function startGameCore() {
 })();
 </script>
 
+
+
+<!-- V89 SAFE MEME PACK -->
+<script>
+(()=>{
+  'use strict';
+  const V89_VERSION='V89';
+  const V89_EXPECTED={
+    bonk:['meme-bonk','bonk'],
+    scratch:['meme-record-scratch','record-scratch','record scratch'],
+    gasp:['meme-crowd-gasp','crowd-gasp','crowd gasp'],
+    airhorn:['meme-airhorn','airhorn','air-horn'],
+    glitch:['meme-glitch','glitch'],
+    cheer:['meme-cheer','crowd-cheer','crowd cheer'],
+    piano:['meme-piano','the-entertainer','the entertainer','entertainer']
+  };
+  const v89Audio={
+    bonk:localAudio('meme-bonk.mp3',.52),
+    scratch:localAudio('meme-record-scratch.mp3',.44),
+    gasp:localAudio('meme-crowd-gasp.mp3',.40),
+    airhorn:localAudio('meme-airhorn.mp3',.35),
+    glitch:localAudio('meme-glitch.mp3',.38),
+    cheer:localAudio('meme-cheer.mp3',.38),
+    piano:localAudio('meme-piano.mp3',.14)
+  };
+  try{ FILE_SOUNDS.push(...Object.values(v89Audio)); }catch(_){ }
+
+  let v89Enabled=true, v89PianoEnabled=true, v89PianoClone=null;
+  let v89Sticker=null, v89Hype=0, v89HypeLast=performance.now();
+  let v89MatchGoAt=-1e9, v89LastReactionAt=-1e9;
+  const v89DangerSeen=new WeakSet();
+
+  function v89Ready(a){
+    return !!(a && (a.dataset?.loadedFrom || a.dataset?.objectUrl || a.readyState>=2));
+  }
+  function v89CleanName(n){
+    return String(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\.[^.]+$/,'').replace(/[^a-z0-9]+/g,' ').trim();
+  }
+  function v89Find(files, aliases){
+    const arr=Array.from(files||[]);
+    for(const alias of aliases){
+      const wanted=v89CleanName(alias);
+      let f=arr.find(x=>v89CleanName(x.name)===wanted);
+      if(f)return f;
+      f=arr.find(x=>v89CleanName(x.name).includes(wanted));
+      if(f)return f;
+    }
+    return null;
+  }
+  function v89BindOne(kind,file){
+    if(!file)return false;
+    const a=v89Audio[kind];
+    try{
+      if(a.dataset.objectUrl)URL.revokeObjectURL(a.dataset.objectUrl);
+      const u=URL.createObjectURL(file);
+      a.dataset.objectUrl=u;a.src=u;a.preload=ORB_MOBILE?'metadata':'auto';a.load();a.dataset.loadedFrom=file.name;
+      return true;
+    }catch(e){console.warn('[V89 MEME]',kind,e);return false;}
+  }
+  function v89BindMemeFiles(fileList){
+    const files=Array.from(fileList||[]);let n=0;
+    for(const [kind,aliases] of Object.entries(V89_EXPECTED)){
+      const f=v89Find(files,aliases);if(f&&v89BindOne(kind,f))n++;
+    }
+    v89UpdatePanel();
+    return n;
+  }
+
+  function v89ShowSticker(text,kind='normal',ms=1050){
+    if(!v89Enabled)return;
+    const colors={normal:'#fff',clutch:'#ffe066',danger:'#ff7675',locked:'#74b9ff',funny:'#55efc4'};
+    v89Sticker={text:String(text||''),kind,color:colors[kind]||'#fff',until:performance.now()+ms,born:performance.now()};
+  }
+  function v89AddHype(amount){v89Hype=Math.max(0,Math.min(100,v89Hype+Number(amount||0)));v89HypeLast=performance.now();}
+  function v89DrawOverlay(){
+    const now=performance.now();
+    const dt=Math.max(0,now-v89HypeLast);v89Hype=Math.max(0,v89Hype-dt*.0035);v89HypeLast=now;
+    try{
+      ctx.save();
+      // HYPE meter compacto, sem cobrir a HUD.
+      const w=122,h=8,x=canvas.width/2-w/2,y=30;
+      ctx.fillStyle='rgba(0,0,0,.60)';ctx.beginPath();ctx.roundRect(x-2,y-2,w+4,h+4,6);ctx.fill();
+      const g=ctx.createLinearGradient(x,0,x+w,0);g.addColorStop(0,'#74b9ff');g.addColorStop(.55,'#ffe066');g.addColorStop(1,'#ff7675');
+      ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(x,y,w*(v89Hype/100),h,4);ctx.fill();
+      ctx.fillStyle='#fff';ctx.font='900 7px Arial Black,Arial';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('HYPE',canvas.width/2,y-3);
+      if(v89Sticker && now<v89Sticker.until){
+        const life=Math.max(0,Math.min(1,(v89Sticker.until-now)/950));
+        const age=Math.max(0,Math.min(1,(now-v89Sticker.born)/150));
+        const scale=.88+Math.sin(age*Math.PI/2)*.20;
+        ctx.translate(canvas.width/2,96);ctx.scale(scale,scale);
+        ctx.globalAlpha=Math.min(1,life*1.8);
+        ctx.font='900 26px Arial Black,Impact,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.lineWidth=7;ctx.strokeStyle='rgba(0,0,0,.85)';ctx.strokeText(v89Sticker.text,0,0);
+        ctx.fillStyle=v89Sticker.color;ctx.fillText(v89Sticker.text,0,0);
+      }else if(v89Sticker){v89Sticker=null;}
+      ctx.restore();
+    }catch(e){try{ctx.restore()}catch(_){}}
+  }
+
+  function v89Play(kind,volume=null){
+    if(!v89Enabled)return false;
+    const a=v89Audio[kind];
+    if(v89Ready(a))return playFileSound(a,true,volume);
+    return false;
+  }
+  function v89Reaction(kind,text,style='normal'){
+    const now=performance.now();if(now-v89LastReactionAt<700)return false;v89LastReactionAt=now;
+    v89ShowSticker(text,style,1050);return v89Play(kind);
+  }
+
+  // Fallback: em vez de repetir "I got this", usa meme SFX + sticker.
+  // "I got this" só volta como último recurso bem depois do começo da partida.
+  try{
+    v88PlayFallbackVoice=function(ball,force=false){
+      if(!ball||ball.isBoss||v88HasDedicatedFighterAudio(ball.id))return false;
+      const now=performance.now(), key=String(ball.id||ball.name||'fighter');
+      const per=Number(v88FallbackVoiceLastByFighter.get(key)||0);
+      if(!force && (now-per<9000 || now-v88FallbackVoiceLastGlobal<4200))return false;
+      v88FallbackVoiceLastByFighter.set(key,now);v88FallbackVoiceLastGlobal=now;
+      const choices=[];
+      if(v89Ready(v89Audio.glitch))choices.push(['glitch','LOCKED IN!','locked']);
+      if(v89Ready(v89Audio.bonk))choices.push(['bonk','BRO...','funny']);
+      if(v89Ready(v89Audio.scratch))choices.push(['scratch','NO SHOT!','danger']);
+      if(v89Ready(v89Audio.cheer))choices.push(['cheer','CLUTCH!','clutch']);
+      if(choices.length){const c=choices[Math.floor(Math.random()*choices.length)];return v89Reaction(c[0],c[1],c[2]);}
+      if(now-v89MatchGoAt<12000)return false;
+      if(!v89Ready(sndMatchStart))return false;
+      v89ShowSticker('I GOT THIS!','locked',950);
+      return playFileSound(sndMatchStart,true,force?.58:.44);
+    };
+  }catch(e){console.warn('[V89 fallback]',e)}
+
+  // Reações em golpes e momentos de perigo.
+  try{
+    const baseHit=v55ApplyHit;
+    v55ApplyHit=function(target,source,dmg,...rest){
+      const before=Number(target?.damagePercent||0), aliveBefore=!!target?.alive;
+      const out=baseHit(target,source,dmg,...rest);
+      const after=Number(target?.damagePercent||before);
+      if(aliveBefore && target && !target.isBoss){
+        const delta=Math.max(0,after-before);
+        v89AddHype(Math.min(16,delta*.72));
+        if(delta>=12 && Math.random()<.28){v89Reaction('bonk','BRO...','funny');}
+        if(after>=120 && !v89DangerSeen.has(target)){
+          v89DangerSeen.add(target);v89Reaction('gasp','NO WAY!','danger');v89AddHype(18);
+        }
+      }
+      return out;
+    };
+  }catch(e){console.warn('[V89 hit hook]',e)}
+
+  try{
+    const baseSound=playSound;
+    playSound=function(type,...args){
+      const r=baseSound(type,...args);
+      if(!v89Enabled)return r;
+      if(type==='supreme'){v89AddHype(24);v89Reaction('glitch','LOCKED IN!','locked');}
+      else if(type==='smash'){
+        // V90 cuida do áudio de KO. Aqui fica só o impacto visual para não empilhar 2–3 memes.
+        v89AddHype(30);
+        v89ShowSticker('KO!','clutch',620);
+      }
+      return r;
+    };
+  }catch(e){console.warn('[V89 sound hook]',e)}
+
+  // Render por cima da HUD final, sem mexer no jogo base.
+  try{
+    const baseHud=drawHUD;
+    drawHUD=function(){baseHud();v89DrawOverlay();};
+  }catch(e){console.warn('[V89 HUD]',e)}
+
+  function v89StopPiano(){
+    try{if(v89PianoClone){v89PianoClone.pause();v89PianoClone.currentTime=0;}}catch(_){ }
+    v89PianoClone=null;
+  }
+  function v89StartPiano(){
+    v89StopPiano();
+    if(!v89Enabled||!v89PianoEnabled||gameOver||balls.some(b=>b.isBoss&&b.alive))return false;
+    if(!v89Ready(v89Audio.piano))return false;
+    try{
+      const c=v89Audio.piano.cloneNode();c.loop=true;c.volume=.13;v89PianoClone=c;
+      if(isRecording&&audioCtx&&audioDest)routeAudioToRecording(c);
+      const pr=c.play();if(pr?.catch)pr.catch(()=>{v89StopPiano();});
+      return true;
+    }catch(e){v89StopPiano();return false;}
+  }
+  try{
+    const baseCountdown=startCountdown;
+    startCountdown=function(){
+      v89MatchGoAt=performance.now()+2400;v89Hype=8;v89DangerSeen.clear?.();v89StopPiano();
+      const r=baseCountdown();
+      setTimeout(()=>{if(!gameOver)v89StartPiano();},3000);
+      return r;
+    };
+  }catch(e){console.warn('[V89 countdown]',e)}
+  setInterval(()=>{if(gameOver||document.getElementById('setupScreen')?.classList.contains('is-active'))v89StopPiano();},700);
+
+  // Detecta os arquivos seguros/royalty-free quando a pasta/arquivos são importados.
+  try{
+    const baseLoad=loadAudioSelection;
+    loadAudioSelection=function(fileList){const out=baseLoad(fileList);try{v89BindMemeFiles(fileList);}catch(_){}return out;};
+  }catch(e){console.warn('[V89 loader]',e)}
+
+  function v89UpdatePanel(){
+    const p=document.getElementById('v89MemeStatus');if(!p)return;
+    const effects=['bonk','scratch','gasp','airhorn','glitch','cheer'];
+    const n=effects.filter(k=>v89Ready(v89Audio[k])).length;
+    const pn=v89Ready(v89Audio.piano)?'🎹 piano OK':'🎹 piano opcional';
+    p.textContent=`🎭 Meme Pack ${n}/${effects.length} • ${pn} • fallback sem repetir “I got this” no começo`;
+  }
+  function v89InstallUi(){
+    if(document.getElementById('v89MemeBox'))return;
+    const style=document.createElement('style');style.textContent=`
+      #v89MemeBox{border:1px solid #7b5cff;border-radius:11px;background:linear-gradient(145deg,rgba(49,31,88,.72),rgba(11,20,32,.9));padding:9px;font-size:.58rem;color:#e9e4ff;line-height:1.4}
+      #v89MemeBox b{color:#ffe066} #v89MemeBox label{display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 6px;border-radius:7px;background:rgba(0,0,0,.20);cursor:pointer}
+      #v89MemeStatus{margin-top:5px;color:#b9ffcf} #v89MemeFiles{margin-top:4px;color:#b8c8d8;font-size:.50rem}
+    `;document.head.appendChild(style);
+    const box=document.createElement('div');box.id='v89MemeBox';box.innerHTML=`<b>🎭 MEME PACK 2026 — SAFE MODE</b><div id="v89MemeStatus"></div><label><input id="v89MemeFxToggle" type="checkbox" checked> Reações + stickers + HYPE</label><label><input id="v89MemePianoToggle" type="checkbox" checked> Piano meme nas lutas normais</label><div id="v89MemeFiles">Arquivos aceitos: meme-bonk, meme-record-scratch, meme-crowd-gasp, meme-airhorn, meme-glitch, meme-cheer e meme-piano (MP3/WAV/OGG).</div>`;
+    const side=document.querySelector('.menu-side');
+    const anchor=document.querySelector('.auto-assets-box');
+    if(anchor&&anchor.parentNode)anchor.insertAdjacentElement('afterend',box);else if(side)side.prepend(box);else document.getElementById('setupScreen')?.appendChild(box);
+    box.querySelector('#v89MemeFxToggle')?.addEventListener('change',e=>{v89Enabled=!!e.target.checked;if(!v89Enabled)v89StopPiano();});
+    box.querySelector('#v89MemePianoToggle')?.addEventListener('change',e=>{v89PianoEnabled=!!e.target.checked;if(!v89PianoEnabled)v89StopPiano();});
+    v89UpdatePanel();
+  }
+
+  queueMicrotask(()=>{
+    v89InstallUi();
+    try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V89 • MEME PACK • HYPE • HATCHI • REC • 9:16 ';}catch(_){ }
+    try{document.title='ORBCLASH V89 | MEME PACK + HATCHI + REC';}catch(_){ }
+  });
+})();
+</script>
+
+
+<!-- V90 — MEME DEATH EXPRESSIONS -->
+<script>
+(()=>{
+  'use strict';
+  const V90='V90';
+  window.v90DeathHoldUntil=0;
+
+  // Os arquivos continuam externos: basta estarem na pasta importada/vinculada.
+  // Não incorporamos os MP3 no HTML; o jogo só reconhece os nomes e os reproduz.
+  const V90_ALIASES={
+    kirby:['kirby-falling(1)','kirby-falling','kirby falling'],
+    roblox:['roblox-death-sound-effect','roblox death sound effect','roblox death'],
+    huh:['huh-cat-meme','huh cat meme','huh cat'],
+    awkward:['y2mate_honnyd0','y2mate honnyd0','y2mate'],
+    frogLaugh:['frog-laughing-meme','frog laughing meme','frog laugh'],
+    catLaugh:['cat-laugh-meme-1','cat laugh meme 1','cat laugh'],
+    chicken:['chicken-on-tree-screaming','chicken on tree screaming','chicken screaming']
+  };
+  const v90Audio={
+    kirby:localAudio('kirby-falling(1).mp3',.72),
+    roblox:localAudio('roblox-death-sound-effect.mp3',.66),
+    huh:localAudio('huh-cat-meme.mp3',.66),
+    awkward:localAudio('y2mate_HOnnyD0.mp3',.34),
+    frogLaugh:localAudio('frog-laughing-meme.mp3',.36),
+    catLaugh:localAudio('cat-laugh-meme-1.mp3',.40),
+    chicken:localAudio('chicken-on-tree-screaming.mp3',.48)
+  };
+  try{FILE_SOUNDS.push(...Object.values(v90Audio));}catch(_){ }
+
+  let v90Enabled=true;
+  let v90DeathFx=[];
+  let v90LastMemeAt=-1e9;
+  let v90LastLaughAt=-1e9;
+  let v90LastHuhAt=-1e9;
+  const v90SeenDeaths=new WeakSet();
+
+  function clean(n){
+    return String(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\.[^.]+$/,'').replace(/[^a-z0-9]+/g,' ').trim();
+  }
+  function ready(a){return !!(a&&(a.dataset?.loadedFrom||a.dataset?.objectUrl||a.readyState>=2));}
+  function findFile(files,aliases){
+    const arr=Array.from(files||[]);
+    for(const alias of aliases){
+      const q=clean(alias);
+      let f=arr.find(x=>clean(x.name)===q); if(f)return f;
+      f=arr.find(x=>clean(x.name).includes(q)); if(f)return f;
+    }
+    return null;
+  }
+  function bind(kind,file){
+    if(!file)return false; const a=v90Audio[kind];
+    try{
+      if(a.dataset.objectUrl)URL.revokeObjectURL(a.dataset.objectUrl);
+      const u=URL.createObjectURL(file);a.dataset.objectUrl=u;a.src=u;a.preload=ORB_MOBILE?'metadata':'auto';a.load();a.dataset.loadedFrom=file.name;return true;
+    }catch(e){console.warn('[V90 AUDIO]',kind,e);return false;}
+  }
+  function bindFiles(fileList){
+    const files=Array.from(fileList||[]);let n=0;
+    for(const [k,aliases] of Object.entries(V90_ALIASES)){const f=findFile(files,aliases);if(f&&bind(k,f))n++;}
+    updatePanel();return n;
+  }
+
+  // Reprodutor de KO: funciona durante a pequena pausa pós-morte, mesmo depois de gameOver=true.
+  // O clone entra em activeAudioClones para também ser capturado no MP4 e parado na cena final.
+  function playKo(kind,vol=null,maxMs=0){
+    if(!v90Enabled)return false;const a=v90Audio[kind];if(!ready(a))return false;
+    let c=null,dead=false;
+    const cleanup=()=>{
+      if(dead)return;dead=true;
+      try{c.dataset.v88Dead='1';c.onended=c.onerror=c.onabort=null;}catch(_){ }
+      try{activeAudioClones=activeAudioClones.filter(x=>x!==c);}catch(_){ }
+    };
+    try{
+      v88PruneAudioClones?.();
+      const limit=isRecording?(ORB_MOBILE?6:8):(ORB_MOBILE?6:9);
+      if(activeAudioClones.length>=limit)return false;
+      c=a.cloneNode(); c.volume=vol==null?a.volume:vol;
+      activeAudioClones.push(c);c.onended=cleanup;c.onerror=cleanup;c.onabort=cleanup;
+      if(isRecording&&audioCtx&&audioDest)routeAudioToRecording(c);
+      const pr=c.play();if(pr?.catch)pr.catch(()=>cleanup());
+      if(maxMs>0)setTimeout(()=>{if(!dead){try{c.pause();}catch(_){ }cleanup();}},maxMs);
+      return true;
+    }catch(e){cleanup();return false;}
+  }
+
+  function dedicated(id){try{return !!v88HasDedicatedFighterAudio(id);}catch(_){return false;}}
+
+  // V90: “I got this” fica reservado para a vinheta do GO.
+  // Durante a luta, lutadores sem pacote próprio usam os memes importados, nunca a vinheta de novo.
+  try{
+    v88PlayFallbackVoice=function(ball,force=false){
+      if(!v90Enabled||!ball||ball.isBoss||dedicated(ball.id))return false;
+      const now=performance.now(),key=String(ball.id||ball.name||'fighter');
+      const per=Number(v88FallbackVoiceLastByFighter.get(key)||0);
+      if(!force&&(now-per<10500||now-v88FallbackVoiceLastGlobal<5000))return false;
+      const pool=[];
+      if(ready(v90Audio.huh))pool.push(['huh',.50,520]);
+      if(ready(v90Audio.awkward))pool.push(['awkward',.23,1050]);
+      if(ready(v90Audio.catLaugh)&&Math.random()<.32)pool.push(['catLaugh',.28,900]);
+      if(ready(v90Audio.frogLaugh)&&Math.random()<.22)pool.push(['frogLaugh',.22,900]);
+      if(!pool.length)return false;
+      const pick=pool[Math.floor(Math.random()*pool.length)];
+      v88FallbackVoiceLastByFighter.set(key,now);v88FallbackVoiceLastGlobal=now;v90LastMemeAt=now;
+      return playKo(pick[0],pick[1],pick[2]);
+    };
+  }catch(e){console.warn('[V90 FALLBACK]',e)}
+
+  function snapshotBall(b){
+    return {id:b.id,name:b.name||b.id,radius:b.radius||22,color:b.color||'#aaa',eye:b.eye||'#111',origin:b.origin||'',isSuper:!!b.isSuper,isBoss:!!b.isBoss};
+  }
+  function chooseDeathSound(ball,source,damage){
+    if(ball.id==='karby'&&ready(v90Audio.kirby))return {kind:'kirby',label:'NOOO!',style:'panic',max:1500};
+    if(!dedicated(ball.id)){
+      if(damage>=12&&ready(v90Audio.chicken)&&Math.random()<.52)return {kind:'chicken',label:'AAAAA!',style:'panic',max:1750};
+      if(ready(v90Audio.roblox)&&Math.random()<.68)return {kind:'roblox',label:'OOF!',style:'dead',max:1500};
+      if(ready(v90Audio.huh))return {kind:'huh',label:'HUH?!',style:'shock',max:650};
+    }
+    // Personagens com voz própria ainda ganham a animação, mas não empilhamos outro áudio.
+    return {kind:null,label:ball.isBoss?'DEFEATED!':'KO!',style:'dead',max:0};
+  }
+  function triggerDeath(ball,source,damage=0){
+    if(!ball||v90SeenDeaths.has(ball))return;
+    v90SeenDeaths.add(ball);
+    const now=performance.now(), sound=chooseDeathSound(ball,source,damage);
+    const dur=1450;
+    v90DeathFx.push({ball:snapshotBall(ball),x:Number(ball.x||canvas.width/2),y:Number(ball.y||canvas.height/2),vx:Number(ball.vx||0),vy:Number(ball.vy||0),born:now,dur,label:sound.label,style:sound.style,source:source?snapshotBall(source):null});
+    if(v90DeathFx.length>3)v90DeathFx.splice(0,v90DeathFx.length-3);
+    window.v90DeathHoldUntil=Math.max(Number(window.v90DeathHoldUntil||0),now+dur+120);
+    v90LastMemeAt=now;
+    if(sound.kind)playKo(sound.kind,null,sound.max);
+
+    // Pós-KO raro: risada OU piano constrangedor. Nunca os dois e nunca em spam.
+    if(source&&now-v90LastLaughAt>8500&&!dedicated(ball.id)&&['roblox','huh',null].includes(sound.kind)){
+      const roll=Math.random();
+      if(roll<.18&&(ready(v90Audio.catLaugh)||ready(v90Audio.frogLaugh))){
+        v90LastLaughAt=now;
+        const k=ready(v90Audio.catLaugh)&&ready(v90Audio.frogLaugh)?(Math.random()<.55?'catLaugh':'frogLaugh'):(ready(v90Audio.catLaugh)?'catLaugh':'frogLaugh');
+        setTimeout(()=>{if(performance.now()<Number(window.v90DeathHoldUntil||0)+220)playKo(k,k==='frogLaugh'?.28:.34,1250);},520);
+      }else if(roll<.30&&ready(v90Audio.awkward)){
+        v90LastLaughAt=now;
+        setTimeout(()=>{if(performance.now()<Number(window.v90DeathHoldUntil||0)+220)playKo('awkward',.28,1300);},320);
+      }
+    }
+  }
+
+  function drawExpression(fx,t){
+    const b=fx.ball,r=b.radius||22;
+    const pop=t<.18?(.82+t/.18*.30):(1.12-(t-.18)*.26);
+    const fade=t>.72?Math.max(0,1-(t-.72)/.28):1;
+    const rise=44*(t*t);
+    const spin=(fx.style==='panic'?Math.sin(t*11)*.14:(t*t)*.65)*(fx.vx<0?-1:1);
+    const x=Math.max(r+5,Math.min(canvas.width-r-5,fx.x+fx.vx*t*7));
+    const y=Math.max(r+8,Math.min(canvas.height-r-28,fx.y-rise));
+    ctx.save();ctx.translate(x,y);ctx.rotate(spin);ctx.scale(pop,pop);ctx.globalAlpha=.96*fade;
+    if(b.isBoss){try{drawMasterHand(ctx,r,'IDLE',0);}catch(_){ }}else{try{drawCachedFighter(b);}catch(_){ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fillStyle=b.color;ctx.fill();}}
+
+    // Máscara facial de reação — aparece só no KO para a bola finalmente "atuar".
+    if(!b.isBoss){
+      ctx.globalAlpha=.98*fade;
+      const eyeY=-r*.10, ex=r*.29, er=Math.max(3,r*.12);
+      ctx.fillStyle='rgba(255,255,255,.92)';
+      ctx.beginPath();ctx.arc(-ex,eyeY,er*1.28,0,Math.PI*2);ctx.arc(ex,eyeY,er*1.28,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#111';ctx.lineWidth=Math.max(2,r*.08);ctx.lineCap='round';
+      if(fx.style==='shock'||fx.style==='panic'){
+        ctx.fillStyle='#111';ctx.beginPath();ctx.arc(-ex,eyeY,er*.48,0,Math.PI*2);ctx.arc(ex,eyeY,er*.48,0,Math.PI*2);ctx.fill();
+      }else{
+        for(const sx of [-1,1]){const cx=sx*ex;ctx.beginPath();ctx.moveTo(cx-er,eyeY-er);ctx.lineTo(cx+er,eyeY+er);ctx.moveTo(cx+er,eyeY-er);ctx.lineTo(cx-er,eyeY+er);ctx.stroke();}
+      }
+      // Boca varia entre choque e derrota.
+      ctx.fillStyle='#161616';ctx.strokeStyle='#fff';ctx.lineWidth=1.4;
+      ctx.beginPath();
+      if(fx.style==='panic'){ctx.ellipse(0,r*.30,r*.20,r*.29,0,0,Math.PI*2);}
+      else if(fx.style==='shock'){ctx.ellipse(0,r*.28,r*.17,r*.22,0,0,Math.PI*2);}
+      else{ctx.arc(0,r*.42,r*.23,Math.PI*1.05,Math.PI*1.95);}
+      ctx.fill();ctx.stroke();
+      // Duas gotinhas cartunescas nas reações de pânico.
+      if(fx.style==='panic'){
+        ctx.fillStyle='#74b9ff';ctx.beginPath();ctx.ellipse(-r*.68,-r*.24,r*.09,r*.18,-.45,0,Math.PI*2);ctx.ellipse(r*.68,-r*.20,r*.09,r*.18,.45,0,Math.PI*2);ctx.fill();
+      }
+    }
+    ctx.restore();
+
+    // Balão curto acima da bola, contornado para funcionar em qualquer mapa.
+    ctx.save();ctx.globalAlpha=fade;ctx.textAlign='center';ctx.textBaseline='middle';
+    const ty=Math.max(58,y-r*1.65);ctx.font='900 18px Arial Black,Impact,sans-serif';ctx.lineWidth=6;ctx.strokeStyle='rgba(0,0,0,.88)';ctx.strokeText(fx.label,x,ty);ctx.fillStyle=fx.style==='panic'?'#ff7675':fx.style==='shock'?'#74b9ff':'#ffe066';ctx.fillText(fx.label,x,ty);ctx.restore();
+  }
+  function drawDeathFx(){
+    if(!v90Enabled||!v90DeathFx.length)return;
+    const now=performance.now();
+    for(let i=v90DeathFx.length-1;i>=0;i--){const fx=v90DeathFx[i],t=(now-fx.born)/fx.dur;if(t>=1){v90DeathFx.splice(i,1);continue;}drawExpression(fx,Math.max(0,Math.min(1,t)));}
+  }
+
+  // Captura mortes por dano normal.
+  try{
+    const base=v55ApplyHit;
+    v55ApplyHit=function(target,source,dmg,...rest){
+      const beforeAlive=!!target?.alive,beforeHp=Number(target?.hp||0);
+      const out=base(target,source,dmg,...rest);
+      const afterHp=Number(target?.hp||0),dealt=Math.max(0,beforeHp-afterHp);
+      if(beforeAlive&&target&&!target.alive)triggerDeath(target,source,dealt);
+      else if(v90Enabled&&beforeAlive&&target?.alive&&!target.isBoss&&!dedicated(target.id)&&dealt>=7&&afterHp>0&&afterHp<=Math.max(22,(target.maxHp||100)*.28)){
+        const now=performance.now();if(now-v90LastHuhAt>6500&&ready(v90Audio.huh)&&Math.random()<.20){v90LastHuhAt=now;playKo('huh',.52,520);try{v89ShowSticker?.('HUH?!','danger',620);}catch(_){ }}
+      }
+      return out;
+    };
+  }catch(e){console.warn('[V90 HIT HOOK]',e)}
+
+  // Captura mortes que acontecem dentro do update (veneno, boss etc.).
+  try{
+    const baseUpdate=Ball.prototype.update;
+    Ball.prototype.update=function(...args){
+      const was=!!this.alive,beforeHp=Number(this.hp||0),source=this.lastHitBy||null;
+      const out=baseUpdate.apply(this,args);
+      if(was&&!this.alive)triggerDeath(this,source,Math.max(0,beforeHp-Number(this.hp||0)));
+      return out;
+    };
+  }catch(e){console.warn('[V90 UPDATE HOOK]',e)}
+
+  // Desenha depois da HUD/stickers para a reação de KO ficar legível no vídeo.
+  try{const baseHud=drawHUD;drawHUD=function(){baseHud();drawDeathFx();};}catch(e){console.warn('[V90 HUD]',e)}
+
+  // Nova partida = limpa fantasmas/estado de KO.
+  try{
+    const baseCountdown=startCountdown;
+    startCountdown=function(){v90DeathFx.length=0;window.v90DeathHoldUntil=0;return baseCountdown();};
+  }catch(_){ }
+
+  // Reconhece os 7 arquivos exatamente como foram baixados.
+  try{
+    const baseLoad=loadAudioSelection;
+    loadAudioSelection=function(fileList){const out=baseLoad(fileList);try{bindFiles(fileList);}catch(_){ }return out;};
+  }catch(e){console.warn('[V90 LOADER]',e)}
+
+  function updatePanel(){
+    const el=document.getElementById('v90MemeStatus');if(!el)return;
+    const n=Object.keys(v90Audio).filter(k=>ready(v90Audio[k])).length;
+    el.textContent=`🔊 ${n}/7 memes detectados • KO expressivo + cooldown antispam`;
+  }
+  function installUi(){
+    if(document.getElementById('v90MemeDeaths'))return;
+    const style=document.createElement('style');style.textContent=`#v90MemeDeaths{margin-top:7px;border-top:1px dashed rgba(255,255,255,.18);padding-top:7px}#v90MemeDeaths label{display:flex;gap:6px;align-items:center}#v90MemeStatus{color:#b9ffcf;margin-top:4px;font-size:.50rem}`;document.head.appendChild(style);
+    const host=document.getElementById('v89MemeBox')||document.querySelector('.auto-assets-box');if(!host)return;
+    const d=document.createElement('div');d.id='v90MemeDeaths';d.innerHTML=`<b>💀 KO EXPRESSIVO</b><label><input id="v90DeathToggle" type="checkbox" checked> Animação facial + memes na morte</label><div id="v90MemeStatus"></div><div style="font-size:.47rem;color:#b8c8d8;margin-top:3px">Reconhece: Kirby Falling • Roblox Death • Huh Cat • y2mate_HOnnyD0 • Frog Laugh • Cat Laugh • Chicken Screaming.</div>`;host.appendChild(d);
+    d.querySelector('#v90DeathToggle')?.addEventListener('change',e=>{v90Enabled=!!e.target.checked;if(!v90Enabled){v90DeathFx.length=0;window.v90DeathHoldUntil=0;}});
+    updatePanel();
+  }
+
+  queueMicrotask(()=>{
+    installUi();
+    try{const t=document.querySelector('.app-title');if(t)t.childNodes[0].textContent='ORBCLASH V90 • KO EXPRESSIVO • MEME PACK • HATCHI • REC • 9:16 ';}catch(_){ }
+    try{document.title='ORBCLASH V90 | KO EXPRESSIVO + MEME PACK';}catch(_){ }
+  });
+})();
+</script>
 </body>
 </html>
